@@ -1,0 +1,29 @@
+One to one chat
+Group chat
+Old chat / chatlist / unread count / Online user
+Reply / Delete
+Send Images, files, video, 
+Emoji, video message, voice msg, screen recoder
+Right side User info / edit profile
+
+For api / backend
+Node js, express js mongo db socket io
+
+For frontend 
+React js, material ui
+
+Steps
+Register
+Login
+App 
+Api side by side
+
+
+// errors and bugs
+User is not removed after logout
+
+
+
+
+
+  

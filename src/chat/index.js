@@ -5,6 +5,7 @@ import ChatBox from "./mainchat";
 import Profile from "./profile";
 import { useLocation, useNavigate } from "react-router-dom";
 import io from "socket.io-client";
+import axios from "axios";
 const PATH = "http://localhost:5000";
 const Chat = () => {
   const socketRef = useRef();
@@ -35,23 +36,51 @@ const Chat = () => {
         console.log(data, "form another users");
         setAllMsg((prevState) => [...prevState, data]);
       });
+      socketRef.current.on("DELETED_MSG", (data) => {
+        setAllMsg((prevState) =>
+          prevState.filter((item) => item._id != data.msg._id)
+        );
+      });
 
       return () => socketRef.current.disconnect();
     }
   }, [isConnected]);
   const handleSendMsg = (msg) => {
     if (socketRef.current.connected) {
+      let sender = state;
+      sender.socketId = socketRef.current.id;
       const data = {
         msg,
         receiver: roomData.receiver,
-        sender: state,
+        sender,
       };
       socketRef.current.emit("SEND_MSG", data);
-      setAllMsg((prevState) => [...prevState, data]);
+      // setAllMsg((prevState) => [...prevState, data]);
     }
   };
 
+  const handleDelete = (id) => {
+    axios
+      .delete(`http://localhost:5000/message/${id}`)
+      .then((res) => {
+        if (socketRef.current.connected) {
+          const data = {
+            msg: res.data.data,
+            receiver: roomData.receiver,
+          };
+          socketRef.current.emit("DELETE_MSG", data);
+          setAllMsg((prevState) =>
+            prevState.filter((data) => data._id != res.data.data._id)
+          );
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   if (!state) return null;
+  console.log(allMsg);
   return (
     <Paper square elevation={0} sx={{ height: "100vh", display: "flex" }}>
       <SideBar
@@ -66,7 +95,7 @@ const Chat = () => {
         handleSendMsg={handleSendMsg}
         allMsg={allMsg}
         user={state}
-        setAllMsg={setAllMsg}
+        handleDelete={handleDelete}
       />
       <Profile user={state} />
     </Paper>

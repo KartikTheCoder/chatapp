@@ -31,10 +31,16 @@ const socketInit = (server) => {
       addUser(user, socket.id);
       io.emit("USER_ADDED", onlineUsers);
     });
-    socket.on("SEND_MSG", (msg) => {
+    socket.on("SEND_MSG", async (msg) => {
       console.log(msg, "MSG FROM FRONTEND");
-      saveMsg(msg);
-      socket.to(msg.receiver.socketId).emit("RECEIVED_MSG", msg);
+      const isSaved = await saveMsg(msg);
+      io.to(msg.receiver.socketId)
+        .to(msg.sender.socketId)
+        .emit("RECEIVED_MSG", isSaved);
+    });
+
+    socket.on("DELETE_MSG", (msg) => {
+      socket.to(msg.receiver.socketId).emit("DELETED_MSG", msg);
     });
     socket.on("disconnect", () => {
       removeUser(socket.id);

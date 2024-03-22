@@ -13,18 +13,8 @@ import {
 } from "@mui/material";
 import ReplyIcon from "@mui/icons-material/Reply";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import axios from "axios";
-const ChatArea = ({ allMsg, user, setAllMsg }) => {
-  const handleDelete = (id) => {
-    axios
-      .delete(`http://localhost:5000/message/${id}`)
-      .then((res) => {
-        console.log(res);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+
+const ChatArea = ({ allMsg, user, handleDelete }) => {
   return (
     <Box sx={{ overflowY: "auto", flex: "1 0 0", background: "#f9f9f9" }}>
       <Stack

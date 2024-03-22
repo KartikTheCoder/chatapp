@@ -3,7 +3,7 @@ import Header from "./Header";
 import ChatArea from "./ChatArea";
 import Footer from "./Footer";
 
-const ChatBox = ({ roomData, handleSendMsg, allMsg, user, setAllMsg }) => {
+const ChatBox = ({ roomData, handleSendMsg, allMsg, user, handleDelete }) => {
   return (
     <Box
       sx={{
@@ -16,7 +16,7 @@ const ChatBox = ({ roomData, handleSendMsg, allMsg, user, setAllMsg }) => {
       {roomData.room ? (
         <>
           <Header roomData={roomData} />
-          <ChatArea allMsg={allMsg} user={user} setAllMsg={setAllMsg} />
+          <ChatArea allMsg={allMsg} user={user} handleDelete={handleDelete} />
           <Footer handleSendMsg={handleSendMsg} />
         </>
       ) : (
